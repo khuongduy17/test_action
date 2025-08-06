@@ -1,0 +1,34 @@
+name: Manual Node Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: 'Target branch to run the test on'
+        required: true
+        default: 'main'
+        type: string
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.target_branch }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Run Node.js command
+        run: node -v
+        
+      - name: Display branch info
+        run: |
+          echo "Running on branch: ${{ github.event.inputs.target_branch }}"
+          echo "Current commit: $(git rev-parse HEAD)"
